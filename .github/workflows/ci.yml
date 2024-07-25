@@ -13,13 +13,24 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Rust
+        id: setup-rust
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ env.RUST_VERSION }}
           components: clippy, rustfmt
+      - name: Cache Rust toolchain
+        id: cache-rust-toolchain
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-rust-toolchain-${{ steps.setup-rust.outputs.name }}-${{ steps.setup-rust.outputs.cachekey }}
+      
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: 'rust-cache'
+          cache-all-crates: "true"
 
       - name: Format
         run: cargo fmt --all -- --check
