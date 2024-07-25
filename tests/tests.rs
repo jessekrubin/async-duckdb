@@ -129,7 +129,6 @@ async fn test_pool() {
                 [],
             )?;
             conn.execute("INSERT INTO testing VALUES (1, ?)", ["value1"])
-
         })
         .await
         .expect("writing schema and seed data");
@@ -184,6 +183,6 @@ fn test_blocking_pool() {
         assert_eq!(val, "value1");
         Ok(())
     })
-        .expect("querying for result");
+    .expect("querying for result");
     pool.close_blocking().expect("closing client conn");
 }
