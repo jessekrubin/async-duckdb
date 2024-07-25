@@ -1,5 +1,4 @@
 use crate::Error;
-use std::fmt::Debug;
 use std::{
     path::{Path, PathBuf},
     thread,
@@ -156,8 +155,7 @@ impl Client {
     fn create_conn(mut builder: ClientBuilder) -> Result<Connection, Error> {
         let path = builder.path.take().unwrap_or_else(|| ":memory:".into());
         let config = if let Some(flagsfn) = builder.flagsfn {
-            let cfg = flagsfn()?;
-            cfg
+            flagsfn()?
         } else {
             Config::default()
         };

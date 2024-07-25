@@ -51,15 +51,13 @@ macro_rules! async_test {
 
 async_test!(test_journal_mode);
 async_test!(test_concurrency);
+async_test!(test_pool);
 
 async fn test_journal_mode() {
     let tmp_dir = tempfile::tempdir().unwrap();
     let client = ClientBuilder::new()
         .path(tmp_dir.path().join("duck.db"))
-        .flagsfn(|| {
-            let base = duckdb::Config::default().default_order(duckdb::DefaultOrder::Desc);
-            base
-        })
+        .flagsfn(|| duckdb::Config::default().default_order(duckdb::DefaultOrder::Desc))
         .open()
         .await
         .expect("client unable to be opened");

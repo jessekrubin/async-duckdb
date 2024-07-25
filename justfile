@@ -6,34 +6,26 @@
 @_default:
     just --list --unsorted
 
-all:
-    echo "unimplemented"
+dev: fmt test
 
-build:
-    echo "unimplemented"
+# Format
+fmt:
+    cargo fmt
 
-# ci -- often default or 'all' target
-ci:
-    echo "unimplemented"
-
-lint:
-    echo "unimplemented"
+# Format check
+fmtc:
+    cargo fmt -- --check
 
 test:
-    echo "unimplemented"
+    cargo test
 
-clean:
-    echo "unimplemented"
+build:
+    cargo build
 
+lint:
+    cargo clippy --all-targets --all-features -- -D warnings
 
-NUKE:
-    npx rimraf ./**/node_modules
+lintfix:
+    cargo clippy --all-targets --all-features --fix -- -D warnings
 
-# FORMATTING
-
-fmt-prettier:
-    npx prettier@latest --write .
-
-ruffmt:
-    ruff format .
-
+ci: fmtc test lint
