@@ -48,5 +48,8 @@ pub use duckdb::{Config, Connection};
 
 mod client;
 mod error;
+mod pool;
+
 pub use client::{Client, ClientBuilder};
+pub use pool::{Pool, PoolBuilder};
 pub use error::Error;
