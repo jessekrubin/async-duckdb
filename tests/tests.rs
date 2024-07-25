@@ -51,20 +51,29 @@ macro_rules! async_test {
 
 async_test!(test_journal_mode);
 async_test!(test_concurrency);
-// async_test!(test_pool);
 
 async fn test_journal_mode() {
     let tmp_dir = tempfile::tempdir().unwrap();
     let client = ClientBuilder::new()
         .path(tmp_dir.path().join("duck.db"))
+        .flagsfn(|| {
+            let base = duckdb::Config::default().default_order(duckdb::DefaultOrder::Desc);
+            base
+        })
         .open()
         .await
         .expect("client unable to be opened");
     let mode: String = client
-        .conn(|conn| conn.query_row("PRAGMA journal_mode", [], |row| row.get(0)))
+        .conn(|conn| {
+            conn.query_row(
+                "SELECT value from duckdb_settings() where name = 'default_order';",
+                [],
+                |row| row.get(0),
+            )
+        })
         .await
         .expect("client unable to fetch journal_mode");
-    assert_eq!(mode, "wal");
+    assert_eq!(mode, "desc");
 }
 
 async fn test_concurrency() {

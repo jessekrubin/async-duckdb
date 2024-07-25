@@ -1,4 +1,4 @@
-//! # async-sqlite
+//! # async-duckdb
 //!
 //! A library to interact with sqlite from an async context.
 //!
@@ -8,7 +8,7 @@
 //!
 //! ## Usage
 //!
-//! A `Client` represents a single background sqlite3 connection that can be called
+//! A `Client` represents a single background duckdb connection that can be called
 //! concurrently from any thread in your program.
 //!
 //! To create a sqlite client and run a query:
@@ -18,7 +18,7 @@
 //!
 //! # async fn run() -> Result<(), async_duckdb::Error> {
 //! let client = ClientBuilder::new()
-//!                 .path("/path/to/db.sqlite3")
+//!                 .path("/path/to/db.duckdb")
 //!                 .open()
 //!                 .await?;
 //!
@@ -34,16 +34,17 @@
 //! ## Cargo Features
 //!
 //! This library tries to export almost all features that the underlying
-//! [rusqlite](https://docs.rs/rusqlite/latest/rusqlite/) library contains.
+//! [duckdb](https://docs.rs/duckdb/latest/duckdb/) library contains.
 //!
 //! A notable difference is that the `bundled` feature is **enabled** by default,
 //! but can be disabled with the following line in your Cargo.toml:
 //!
 //! ```toml
-//! async-sqlite = { version = "*", default-features = false }
+//! async-duckdb = { version = "*", default-features = false }
 //! ```
 
 pub use duckdb;
+pub use duckdb::{Config, Connection};
 
 mod client;
 mod error;

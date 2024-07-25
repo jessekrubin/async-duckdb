@@ -1,23 +1,26 @@
-use std::{path::{Path, PathBuf}, thread};
-use std::fmt::{Debug};
 use crate::Error;
+use std::fmt::Debug;
+use std::{
+    path::{Path, PathBuf},
+    thread,
+};
 
 use crossbeam_channel::{bounded, unbounded, Sender};
-use futures_channel::oneshot;
 use duckdb::{Config, Connection};
+use futures_channel::oneshot;
 
 /// A `ClientBuilder` can be used to create a [`Client`] with custom
 /// configuration.
 ///
-/// For more information on creating a sqlite connection, see the
-/// [rusqlite docs](duckdb::Connection::open()).
+/// For more information on creating a duckdb connection, see the
+/// [duckdb docs](duckdb::Connection::open()).
 ///
 /// # Examples
 ///
 /// ```rust
 /// # use async_duckdb::ClientBuilder;
 /// # async fn run() -> Result<(), async_duckdb::Error> {
-/// let client = ClientBuilder::new().path("path/to/db.sqlite3").open().await?;
+/// let client = ClientBuilder::new().path("path/to/db.duckdb").open().await?;
 ///
 /// // ...
 ///
@@ -28,59 +31,30 @@ use duckdb::{Config, Connection};
 #[derive(Default)]
 pub struct ClientBuilder {
     pub(crate) path: Option<PathBuf>,
-    pub(crate) flagsfn: Option<fn() -> Config>,
-    // pub(crate) flags: Config,
-    // pub(crate) config: Config,
-    // pub(crate) journal_mode: Option<JournalMode>,
-    // pub(crate) vfs: Option<String>,
+    pub(crate) flagsfn: Option<fn() -> duckdb::Result<Config>>,
 }
 
-// impl Debug for ClientBuilder {
-//     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-//         f.debug_struct("ClientBuilder")
-//             .field("path", &self.path)
-//             .field("flags", &self.flags)
-//             .finish()
-//     }
-// }
 impl ClientBuilder {
     /// Returns a new [`ClientBuilder`] with the default settings.
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Specify the path of the sqlite3 database to open.
+    /// Specify the path of the duckdb database to open.
     ///
     /// By default, an in-memory database is used.
-    // pub fn path<P: AsRef<Path>>(mut self, path: P) -> Self {
-    //     self.path = Some(path.as_ref().into());
-    //     self
-    // }
     pub fn path<P: AsRef<Path>>(mut self, path: P) -> Self {
         self.path = Some(path.as_ref().into());
         self
     }
+
     /// Specify the [`OpenFlags`] to use when opening a new connection.
     ///
     /// By default, [`OpenFlags::default()`] is used.
-    // pub fn flags(mut self, flags: &Config) -> Self {
-    //     self.flags = flags;
-    // self
-    // }
-
-    // /// Specify the [`JournalMode`] to set when opening a new connection.
-    // ///
-    // /// By default, no `journal_mode` is explicity set.
-    // pub fn journal_mode(mut self, journal_mode: JournalMode) -> Self {
-    //     self.journal_mode = Some(journal_mode);
-    //     self
-    // }
-
-    // Specify the name of the [vfs](https://www.sqlite.org/vfs.html) to use.
-    // pub fn vfs(mut self, vfs: &str) -> Self {
-    //     self.vfs = Some(vfs.to_owned());
-    //     self
-    // }
+    pub fn flagsfn(mut self, flags: fn() -> duckdb::Result<Config>) -> Self {
+        self.flagsfn = Some(flags);
+        self
+    }
 
     /// Returns a new [`Client`] that uses the `ClientBuilder` configuration.
     ///
@@ -119,13 +93,12 @@ enum Command {
     Shutdown(Box<dyn FnOnce(Result<(), Error>) + Send>),
 }
 
-/// Client represents a single sqlite connection that can be used from async
+/// Client represents a single duckdb connection that can be used from async
 /// contexts.
 #[derive(Clone)]
 pub struct Client {
     conn_tx: Sender<Command>,
 }
-
 
 impl Client {
     async fn open_async(builder: ClientBuilder) -> Result<Self, Error> {
@@ -182,8 +155,11 @@ impl Client {
 
     fn create_conn(mut builder: ClientBuilder) -> Result<Connection, Error> {
         let path = builder.path.take().unwrap_or_else(|| ":memory:".into());
-        let config = {
-            builder.flagsfn.unwrap_or(Config::default)()
+        let config = if let Some(flagsfn) = builder.flagsfn {
+            let cfg = flagsfn()?;
+            cfg
+        } else {
+            Config::default()
         };
         let conn = Connection::open_with_flags(path, config)?;
         Ok(conn)
@@ -215,7 +191,7 @@ impl Client {
         Ok(rx.await??)
     }
 
-    /// Closes the underlying sqlite connection.
+    /// Closes the underlying duckdb connection.
     ///
     /// After this method returns, all calls to `self::conn()` or
     /// `self::conn_mut()` will return an [`Error::Closed`] error.
@@ -258,7 +234,7 @@ impl Client {
         Ok(rx.recv()??)
     }
 
-    /// Closes the underlying sqlite connection, blocking the current thread
+    /// Closes the underlying duckdb connection, blocking the current thread
     /// until complete.
     ///
     /// After this method returns, all calls to `self::conn_blocking()` or
