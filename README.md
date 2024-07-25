@@ -1,5 +1,7 @@
 # async-duckdb
 
+**THIS IS A SED/AWK-ed VERSION OF RYAN FOWLER'S `async-sqlite` CRATE (https://github.com/ryanfowler/async-sqlite)**
+
 A library to interact with duckdb from an async context.
 
 This library is tested on both [tokio](https://docs.rs/tokio/latest/tokio/)
@@ -27,7 +29,7 @@ To create a duckdb client and run a query:
 use async_duckdb::{ClientBuilder, JournalMode};
 
 let client = ClientBuilder::new()
-                .path("/path/to/db.duckdb3")
+                .path("/path/to/db.duckdb")
                 .journal_mode(JournalMode::Wal)
                 .open()
                 .await?;
@@ -39,6 +41,7 @@ let value: String = client.conn(|conn| {
 println!("Value is: {value}");
 ```
 
+**POOLS CAN ONLY BE USED WITH `access_mode='read_only'` https://duckdb.org/docs/connect/concurrency.html#handling-concurrency **
 A `Pool` represents a collection of background duckdb3 connections that can be
 called concurrently from any thread in your program.
 
@@ -48,8 +51,7 @@ To create a duckdb pool and run a query:
 use async_duckdb::{JournalMode, PoolBuilder};
 
 let pool = PoolBuilder::new()
-              .path("/path/to/db.duckdb3")
-              .journal_mode(JournalMode::Wal)
+              .path("/path/to/db.duckdb")
               .open()
               .await?;
 
@@ -63,7 +65,7 @@ println!("Value is: {value}");
 ## Cargo Features
 
 This library tries to export almost all features that the underlying
-[ruduckdb](https://docs.rs/ruduckdb/latest/ruduckdb/) library contains.
+[duckdb](https://docs.rs/duckdb/latest/duckdb/) library contains.
 
 A notable difference is that the `bundled` feature is **enabled** by default,
 but can be disabled with the following line in your Cargo.toml:
