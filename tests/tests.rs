@@ -61,6 +61,7 @@ async fn test_journal_mode() {
         .open()
         .await
         .expect("client unable to be opened");
+
     let mode: String = client
         .conn(|conn| {
             conn.query_row(
@@ -131,6 +132,7 @@ async fn test_pool() {
         .await
         .expect("writing schema and seed data");
 
+    client.close().await.expect("client unable to be closed");
     let pool = async_duckdb::PoolBuilder::new()
         .path(tmp_dir.path().join("duck.db"))
         .num_conns(2)
@@ -170,6 +172,7 @@ fn test_blocking_pool() {
         })
         .expect("writing schema and seed data");
 
+    client.close_blocking().expect("client unable to be closed");
     let pool = PoolBuilder::new()
         .path(tmp_dir.path().join("duck.db"))
         .open_blocking()
