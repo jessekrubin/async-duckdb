@@ -1,0 +1,73 @@
+[package]
+name = "async-duckdb"
+version = "0.3.1"
+authors = [
+    "Jesse Rubin",
+    "Ryan Fowler", # based on ryfowl's `async-sqlite` crate
+]
+edition = "2021"
+license = "MIT"
+description = "A library for working with duckdb asynchronously"
+repository = "https://github.com/jessekrubin/async-duckdb"
+documentation = "https://docs.rs/async-duckdb"
+keywords = ["duckdb", "async", "tokio"]
+categories = ["database"]
+
+[features]
+default = ["bundled"]
+#default = ["duckdb/default"]
+bundled = ["duckdb/bundled"]
+json = ["duckdb/json"]
+parquet = ["duckdb/parquet"]
+vtab = ["duckdb/vtab"]
+vtab-loadable = ["duckdb/vtab-loadable"]
+vtab-excel = ["duckdb/vtab-excel"]
+vtab-arrow = ["duckdb/vtab-arrow"]
+appender-arrow = ["duckdb/appender-arrow"]
+vtab-full = ["duckdb/vtab-full"]
+extensions-full = ["duckdb/extensions-full"]
+buildtime_bindgen = ["duckdb/buildtime_bindgen"]
+modern-full = ["duckdb/modern-full"]
+polars = ["duckdb/polars"]
+
+[dependencies]
+crossbeam-channel = { version = "0.5.9" }
+duckdb = { version = "1.0.0" }
+futures-channel = { version = "0.3.29" }
+futures-util = { version = "0.3.29" }
+
+[dev-dependencies]
+async-std = { version = "1.12.0" }
+paste = { version = "1.0.12" }
+tempfile = { version = "3.6.0" }
+tokio = { version = "1.29.1", features = ["rt"] }
+
+
+# array = ["rusqlite/array"]
+# backup = ["rusqlite/backup"]
+# blob = ["rusqlite/blob"]
+# bundled = ["rusqlite/bundled"]
+# bundled-full = ["rusqlite/bundled-full"]
+# bundled-sqlcipher = ["rusqlite/bundled-sqlcipher"]
+# bundled-sqlcipher-vendored-openssl = [
+#     "rusqlite/bundled-sqlcipher-vendored-openssl",
+# ]
+# chrono = ["rusqlite/chrono"]
+# column_decltype = ["rusqlite/column_decltype"]
+# csv = ["rusqlite/csv"]
+# csvtab = ["rusqlite/csvtab"]
+# functions = ["rusqlite/functions"]
+# hooks = ["rusqlite/hooks"]
+# limits = ["rusqlite/limits"]
+# load_extension = ["rusqlite/load_extension"]
+# modern-full = ["rusqlite/modern-full"]
+# serde_json = ["rusqlite/serde_json"]
+# session = ["rusqlite/session"]
+# sqlcipher = ["rusqlite/sqlcipher"]
+# time = ["rusqlite/time"]
+# trace = ["rusqlite/trace"]
+# unlock_notify = ["rusqlite/unlock_notify"]
+# url = ["rusqlite/url"]
+# uuid = ["rusqlite/uuid"]
+# vtab = ["rusqlite/vtab"]
+# window = ["rusqlite/window"]
