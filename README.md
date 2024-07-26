@@ -1,6 +1,13 @@
 # async-duckdb
 
-**THIS IS A SED/AWK-ed VERSION OF RYAN FOWLER'S `async-sqlite` CRATE (https://github.com/ryanfowler/async-sqlite)**
+**NOTE:** THIS IS A SED/AWK-ed VERSION OF RYAN FOWLER'S `async-sqlite` CRATE (https://github.com/ryanfowler/async-sqlite); the following readme is a crude adaptation of the original `async-sqlite` readme.
+
+[![Crates.io](https://img.shields.io/crates/v/async-duckdb)](https://crates.io/crates/async-duckdb)
+[![Docs.rs](https://docs.rs/async-duckdb/badge.svg)](https://docs.rs/async-duckdb)
+[![License](https://img.shields.io/crates/l/async-duckdb)](
+
+___
+
 
 A library to interact with duckdb from an async context.
 
