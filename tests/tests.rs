@@ -49,11 +49,11 @@ macro_rules! async_test {
     };
 }
 
-async_test!(test_journal_mode);
+async_test!(test_config_fn);
 async_test!(test_concurrency);
 async_test!(test_pool);
 
-async fn test_journal_mode() {
+async fn test_config_fn() {
     let tmp_dir = tempfile::tempdir().unwrap();
     let client = ClientBuilder::new()
         .path(tmp_dir.path().join("duck.db"))

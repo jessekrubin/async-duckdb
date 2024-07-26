@@ -26,11 +26,10 @@ concurrently from any thread in your program.
 To create a duckdb client and run a query:
 
 ```rust
-use async_duckdb::{ClientBuilder, JournalMode};
+use async_duckdb::{ClientBuilder};
 
 let client = ClientBuilder::new()
                 .path("/path/to/db.duckdb")
-                .journal_mode(JournalMode::Wal)
                 .open()
                 .await?;
 
