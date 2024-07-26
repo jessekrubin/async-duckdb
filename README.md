@@ -47,7 +47,7 @@ called concurrently from any thread in your program.
 To create a duckdb pool and run a query:
 
 ```rust
-use async_duckdb::{JournalMode, PoolBuilder};
+use async_duckdb::{PoolBuilder};
 
 let pool = PoolBuilder::new()
               .path("/path/to/db.duckdb")
