@@ -1,6 +1,6 @@
 //! # async-duckdb
 //!
-//! A library to interact with sqlite from an async context.
+//! A library to interact with duckdb from an async context.
 //!
 //! This library is tested on both [tokio](https://docs.rs/tokio/latest/tokio/)
 //! and [async_std](https://docs.rs/async-std/latest/async_std/), however
@@ -11,7 +11,7 @@
 //! A `Client` represents a single background duckdb connection that can be called
 //! concurrently from any thread in your program.
 //!
-//! To create a sqlite client and run a query:
+//! To create a duckdb client and run a query:
 //!
 //! ```rust
 //! use async_duckdb::{ClientBuilder};

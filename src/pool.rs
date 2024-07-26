@@ -23,7 +23,7 @@ use futures_util::future::join_all;
 /// ```rust
 /// # use async_duckdb::PoolBuilder;
 /// # async fn run() -> Result<(), async_duckdb::Error> {
-/// let pool = PoolBuilder::new().path("path/to/db.sqlite3").open().await?;
+/// let pool = PoolBuilder::new().path("path/to/db.duck").open().await?;
 ///
 /// // ...
 ///
@@ -55,7 +55,7 @@ impl PoolBuilder {
         Self::default()
     }
 
-    /// Specify the path of the sqlite3 database to open.
+    /// Specify the path of the duckdb database to open.
     ///
     /// By default, an in-memory database is used.
     pub fn path<P: AsRef<Path>>(mut self, path: P) -> Self {
@@ -71,7 +71,7 @@ impl PoolBuilder {
         self
     }
 
-    /// Specify the number of sqlite connections to open as part of the pool.
+    /// Specify the number of duckdb connections to open as part of the pool.
     ///
     /// Defaults to the number of logical CPUs of the current system.
     pub fn num_conns(mut self, num_conns: usize) -> Self {
@@ -151,7 +151,7 @@ impl PoolBuilder {
     }
 }
 
-/// A simple Pool of sqlite connections.
+/// A simple Pool of duckdb connections.
 ///
 /// A Pool has the same API as an individual [`Client`].
 #[derive(Clone)]
@@ -183,7 +183,7 @@ impl Pool {
         self.get().conn_mut(func).await
     }
 
-    /// Closes the underlying sqlite connections.
+    /// Closes the underlying duckdb connections.
     ///
     /// After this method returns, all calls to `self::conn()` or
     /// `self::conn_mut()` will return an [`Error::Closed`] error.
@@ -214,7 +214,7 @@ impl Pool {
         self.get().conn_mut_blocking(func)
     }
 
-    /// Closes the underlying sqlite connections, blocking the current thread.
+    /// Closes the underlying duckdb connections, blocking the current thread.
     ///
     /// After this method returns, all calls to `self::conn_blocking()` or
     /// `self::conn_mut_blocking()` will return an [`Error::Closed`] error.

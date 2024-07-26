@@ -2,7 +2,7 @@
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum Error {
-    /// Indicates that the connection to the sqlite database is closed.
+    /// Indicates that the connection to the duckdb database is closed.
     Closed,
     /// Error updating PRAGMA.
     PragmaUpdate {
