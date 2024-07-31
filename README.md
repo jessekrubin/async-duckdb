@@ -4,7 +4,11 @@
 
 [![Crates.io](https://img.shields.io/crates/v/async-duckdb)](https://crates.io/crates/async-duckdb)
 [![Docs.rs](https://docs.rs/async-duckdb/badge.svg)](https://docs.rs/async-duckdb)
-[![License](https://img.shields.io/crates/l/async-duckdb)](
+[![License](https://img.shields.io/crates/l/async-duckdb)](https://github.com/jessekrubin/async-duckdb/blob/main/LICENSE)
+
+**NOTE:** POOLS CAN ONLY BE USED WITH `access_mode='read_only'` https://duckdb.org/docs/connect/concurrency.html#handling-concurrency
+
+**NOTE:** Providing a custom configuration to a client/pool is done via a closure that returns a duckdb-configuration struct.
 
 ___
 
@@ -47,7 +51,6 @@ let value: String = client.conn(|conn| {
 println!("Value is: {value}");
 ```
 
-**POOLS CAN ONLY BE USED WITH `access_mode='read_only'` https://duckdb.org/docs/connect/concurrency.html#handling-concurrency **
 A `Pool` represents a collection of background duckdb3 connections that can be
 called concurrently from any thread in your program.
 
