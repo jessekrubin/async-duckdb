@@ -1,6 +1,6 @@
 [package]
 name = "async-duckdb"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   "Jesse Rubin",
   "Ryan Fowler", # based on ryfowl's `async-sqlite` crate
@@ -31,7 +31,7 @@ polars = ["duckdb/polars"]
 
 [dependencies]
 crossbeam-channel = { version = "0.5.9" }
-duckdb = { version = "1.0.0" }
+duckdb = { version = "1.1.1" }
 futures-channel = { version = "0.3.29" }
 futures-util = { version = "0.3.29" }
 
