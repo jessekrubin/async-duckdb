@@ -1,3 +1,6 @@
+#![allow(clippy::unwrap_used)]
+#![allow(clippy::unnecessary_wraps)]
+
 use async_duckdb::{ClientBuilder, Error, PoolBuilder};
 #[test]
 fn test_blocking_client() {
@@ -189,6 +192,19 @@ fn test_blocking_pool() {
 }
 
 async fn test_pool_conn_for_each() {
+    /// check that the json extension is loaded
+    fn check_fn(conn: &duckdb::Connection) -> Result<Vec<String>, duckdb::Error> {
+        let mut stmt = conn
+            .prepare_cached("SELECT * from duckdb_extensions() where loaded=true;")
+            .unwrap();
+        let names = stmt
+            .query_map([], |row| row.get("extension_name"))
+            .unwrap()
+            .map(|r| r.unwrap())
+            .collect::<Vec<String>>();
+        Ok(names)
+    }
+
     // make dummy db
     let tmp_dir = tempfile::tempdir().unwrap();
     {
@@ -225,19 +241,7 @@ async fn test_pool_conn_for_each() {
         )
     };
     pool.conn_for_each(load_json_ext).await;
-    fn check_fn(conn: &duckdb::Connection) -> Result<Vec<String>, duckdb::Error> {
-        let mut stmt = conn
-            .prepare_cached("SELECT * from duckdb_extensions() where loaded=true;")
-            .unwrap();
-        let names = stmt
-            .query_map([], |row| row.get("extension_name"))
-            .unwrap()
-            .map(|r| r.unwrap())
-            .collect::<Vec<String>>();
-        println!("{:?}", names);
 
-        Ok(names)
-    }
     let res = pool.conn_for_each(check_fn).await;
     for r in res {
         assert_eq!(r.unwrap(), vec!["json".to_string(),]);
