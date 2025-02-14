@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -30,6 +30,7 @@ jobs:
         with:
           prefix-key: 'rust-cache'
           cache-all-crates: "true"
+          cache-on-failure: "true"
 
       - name: Format
         run: cargo fmt --all -- --check
