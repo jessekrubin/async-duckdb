@@ -35,6 +35,7 @@ pub struct ClientBuilder {
 
 impl ClientBuilder {
     /// Returns a new [`ClientBuilder`] with the default settings.
+    #[must_use]
     pub fn new() -> Self {
         Self::default()
     }
@@ -42,6 +43,7 @@ impl ClientBuilder {
     /// Specify the path of the duckdb database to open.
     ///
     /// By default, an in-memory database is used.
+    #[must_use]
     pub fn path<P: AsRef<Path>>(mut self, path: P) -> Self {
         self.path = Some(path.as_ref().into());
         self
@@ -50,6 +52,7 @@ impl ClientBuilder {
     /// Specify the [`OpenFlags`] to use when opening a new connection.
     ///
     /// By default, [`OpenFlags::default()`] is used.
+    #[must_use]
     pub fn flagsfn(mut self, flags: fn() -> duckdb::Result<Config>) -> Self {
         self.flagsfn = Some(flags);
         self

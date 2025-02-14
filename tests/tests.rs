@@ -1,5 +1,4 @@
 use async_duckdb::{ClientBuilder, Error, PoolBuilder};
-
 #[test]
 fn test_blocking_client() {
     let tmp_dir = tempfile::tempdir().unwrap();
@@ -52,6 +51,7 @@ macro_rules! async_test {
 async_test!(test_config_fn);
 async_test!(test_concurrency);
 async_test!(test_pool);
+async_test!(test_pool_conn_for_each);
 
 async fn test_config_fn() {
     let tmp_dir = tempfile::tempdir().unwrap();
@@ -186,4 +186,62 @@ fn test_blocking_pool() {
     })
     .expect("querying for result");
     pool.close_blocking().expect("closing client conn");
+}
+
+async fn test_pool_conn_for_each() {
+    // make dummy db
+    let tmp_dir = tempfile::tempdir().unwrap();
+    {
+        let client_res = ClientBuilder::new()
+            .path(tmp_dir.path().join("duckdb.db"))
+            .open_blocking();
+        // must do this if we are doing all the tests all at once
+        if let Ok(client) = client_res {
+            client
+                .conn_blocking(|conn| {
+                    conn.execute(
+                        "CREATE TABLE testing (id INTEGER PRIMARY KEY, val TEXT NOT NULL)",
+                        [],
+                    )?;
+                    conn.execute("INSERT INTO testing VALUES (1, ?)", ["value1"])
+                })
+                .expect("writing schema and seed data");
+            client.close_blocking().expect("closing client conn");
+        }
+    }
+
+    let pool = PoolBuilder::new()
+        // .path(tmp_dir.path().join("duckdb.db"))
+        .num_conns(2)
+        // .flagsfn(|| Ok(Config::default()))
+        .open()
+        .await
+        .expect("pool unable to be opened");
+
+    let load_json_ext = move |conn: &duckdb::Connection| {
+        conn.execute_batch(
+            "INSTALL json;
+             LOAD json;",
+        )
+    };
+    pool.conn_for_each(load_json_ext).await;
+    fn check_fn(conn: &duckdb::Connection) -> Result<Vec<String>, duckdb::Error> {
+        let mut stmt = conn
+            .prepare_cached("SELECT * from duckdb_extensions() where loaded=true;")
+            .unwrap();
+        let names = stmt
+            .query_map([], |row| row.get("extension_name"))
+            .unwrap()
+            .map(|r| r.unwrap())
+            .collect::<Vec<String>>();
+        println!("{:?}", names);
+
+        Ok(names)
+    }
+    let res = pool.conn_for_each(check_fn).await;
+    for r in res {
+        assert_eq!(r.unwrap(), vec!["json".to_string(),]);
+    }
+    // cleanup
+    pool.close().await.expect("closing client conn");
 }
