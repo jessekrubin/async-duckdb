@@ -57,5 +57,4 @@ perf = { level = "warn", priority = 3 }
 unwrap_used = "deny"
 # allow pedantic
 missing_errors_doc = "allow"
-missing_panics_doc = "allow"
 module_name_repetitions = "allow"
