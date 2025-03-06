@@ -3,7 +3,7 @@ name = "async-duckdb"
 version = "0.1.0"
 authors = [
   "Jesse Rubin",
-  "Ryan Fowler", # based on ryfowl's `async-sqlite` crate
+  "Ryan Fowler", # via ryfowl's `async-sqlite` crate
 ]
 edition = "2021"
 license = "MIT"
