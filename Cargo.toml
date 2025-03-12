@@ -35,7 +35,8 @@ loadable-extension = ["duckdb/loadable-extension"]
 
 [dependencies]
 crossbeam-channel = { version = "0.5.9" }
-duckdb = { version = "1.2.0" }
+# duckdb = { version = "1.2.1" }
+duckdb = { git = "https://github.com/duckdb/duckdb-rs" }
 futures-channel = { version = "0.3.29" }
 futures-util = { version = "0.3.29" }
 

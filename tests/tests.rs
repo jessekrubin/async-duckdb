@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used)]
 #![allow(clippy::unnecessary_wraps)]
 
+use std::collections::HashSet;
+
 use async_duckdb::{ClientBuilder, Error, PoolBuilder};
 #[test]
 fn test_blocking_client() {
@@ -236,15 +238,18 @@ async fn test_pool_conn_for_each() {
 
     let load_json_ext = move |conn: &duckdb::Connection| {
         conn.execute_batch(
-            "INSTALL json;
-             LOAD json;",
+            "INSTALL arrow;
+            LOAD arrow;
+            "
         )
     };
     pool.conn_for_each(load_json_ext).await;
 
     let res = pool.conn_for_each(check_fn).await;
     for r in res {
-        assert_eq!(r.unwrap(), vec!["json".to_string(),]);
+        let expected =  vec!["arrow", "core_functions"].into_iter().map(|s| s.to_string()).collect::<HashSet<String>>();
+        let extensions_queried = r.unwrap().into_iter().collect::<HashSet<String>>();
+        assert_eq!(extensions_queried, expected);
     }
     // cleanup
     pool.close().await.expect("closing client conn");
