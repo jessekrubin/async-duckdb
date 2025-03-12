@@ -8,24 +8,22 @@ on:
 
 env:
   RUST_VERSION: "stable"
+  SCCACHE_GHA_ENABLED: "true"
+  RUSTC_WRAPPER: "sccache"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.8
       - name: Setup Rust
         id: setup-rust
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ env.RUST_VERSION }}
           components: clippy,rustfmt
-#      - name: Cache Rust toolchain
-#        id: cache-rust-toolchain
-#        uses: actions/cache@v2
-#        with:
-#          key: ${{ runner.os }}-rust-toolchain-${{ steps.setup-rust.outputs.name }}-${{ steps.setup-rust.outputs.cachekey }}
       - uses: Swatinem/rust-cache@v2
         with:
           prefix-key: 'rust-cache'
@@ -40,3 +38,7 @@ jobs:
 
       - name: Test
         run: cargo test
+      
+      - name: Run sccache stat for check
+        shell: bash
+        run: ${SCCACHE_PATH} --show-stats
