@@ -240,14 +240,17 @@ async fn test_pool_conn_for_each() {
         conn.execute_batch(
             "INSTALL arrow;
             LOAD arrow;
-            "
+            ",
         )
     };
     pool.conn_for_each(load_json_ext).await;
 
     let res = pool.conn_for_each(check_fn).await;
     for r in res {
-        let expected =  vec!["arrow", "core_functions"].into_iter().map(|s| s.to_string()).collect::<HashSet<String>>();
+        let expected = vec!["arrow", "core_functions"]
+            .into_iter()
+            .map(|s| s.to_string())
+            .collect::<HashSet<String>>();
         let extensions_queried = r.unwrap().into_iter().collect::<HashSet<String>>();
         assert_eq!(extensions_queried, expected);
     }
