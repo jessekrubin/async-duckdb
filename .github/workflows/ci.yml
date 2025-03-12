@@ -7,11 +7,11 @@ on:
     branches: [main]
 
 env:
-  RUST_VERSION: "1.79.0"
+  RUST_VERSION: "stable"
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +20,7 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ env.RUST_VERSION }}
-          components: clippy, rustfmt
+          components: clippy,rustfmt
 #      - name: Cache Rust toolchain
 #        id: cache-rust-toolchain
 #        uses: actions/cache@v2
@@ -30,6 +30,7 @@ jobs:
         with:
           prefix-key: 'rust-cache'
           cache-all-crates: "true"
+          cache-on-failure: "true"
 
       - name: Format
         run: cargo fmt --all -- --check
