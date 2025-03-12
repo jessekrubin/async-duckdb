@@ -1,5 +1,5 @@
-#![allow(clippy::unwrap_used)]
-#![allow(clippy::unnecessary_wraps)]
+#![expect(clippy::unwrap_used)]
+#![expect(clippy::unnecessary_wraps)]
 
 use std::collections::HashSet;
 
@@ -249,7 +249,7 @@ async fn test_pool_conn_for_each() {
     for r in res {
         let expected = vec!["arrow", "core_functions"]
             .into_iter()
-            .map(|s| s.to_string())
+            .map(std::string::ToString::to_string)
             .collect::<HashSet<String>>();
         let extensions_queried = r.unwrap().into_iter().collect::<HashSet<String>>();
         assert_eq!(extensions_queried, expected);
