@@ -236,18 +236,18 @@ async fn test_pool_conn_for_each() {
         .await
         .expect("pool unable to be opened");
 
-    let load_json_ext = move |conn: &duckdb::Connection| {
+    let load_ext = move |conn: &duckdb::Connection| {
         conn.execute_batch(
-            "INSTALL arrow;
-            LOAD arrow;
+            "INSTALL spatial;
+            LOAD spatial;
             ",
         )
     };
-    pool.conn_for_each(load_json_ext).await;
+    pool.conn_for_each(load_ext).await;
 
     let res = pool.conn_for_each(check_fn).await;
     for r in res {
-        let expected = vec!["arrow", "core_functions"]
+        let expected = vec!["core_functions", "spatial"]
             .into_iter()
             .map(std::string::ToString::to_string)
             .collect::<HashSet<String>>();
