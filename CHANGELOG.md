@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## `v0.2.0`
+
+- upgrade duckdb to `1.3.2`
+- update rust-edition to 2024 as it is 2025
+- format
+- update dev deps
+
 ## `v0.1.0`
 
 - duckdb `v1.2.1` - `v1.2.0` was/is broken
