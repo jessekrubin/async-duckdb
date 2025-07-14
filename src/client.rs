@@ -126,7 +126,7 @@ impl Client {
         thread::spawn(move || {
             let (conn_tx, conn_rx) = unbounded();
 
-            let mut conn = match Client::create_conn(builder) {
+            let mut conn = match Self::create_conn(builder) {
                 Ok(conn) => conn,
                 Err(err) => {
                     func(Err(err));
