@@ -1,6 +1,6 @@
 [package]
 name = "async-duckdb"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
   "Jesse Rubin",
   "Ryan Fowler", # via ryfowl's `async-sqlite` crate
@@ -29,15 +29,13 @@ extensions-full = ["duckdb/extensions-full"]
 buildtime_bindgen = ["duckdb/buildtime_bindgen"]
 modern-full = ["duckdb/modern-full"]
 polars = ["duckdb/polars"]
-column_decltype = ["duckdb/column_decltype"]
-extra_check = ["duckdb/extra_check"]
 loadable-extension = ["duckdb/loadable-extension"]
 chrono = ["duckdb/chrono"]
 uuid = ["duckdb/uuid"]
 
 [dependencies]
 crossbeam-channel = { version = "0.5.9" }
-duckdb = { version = "1.3.2" }
+duckdb = { version = "1.4.0" }
 futures-channel = { version = "0.3.29" }
 futures-util = { version = "0.3.29" }
 
