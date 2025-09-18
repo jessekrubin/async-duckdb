@@ -32,6 +32,8 @@ polars = ["duckdb/polars"]
 column_decltype = ["duckdb/column_decltype"]
 extra_check = ["duckdb/extra_check"]
 loadable-extension = ["duckdb/loadable-extension"]
+chrono = ["duckdb/chrono"]
+uuid = ["duckdb/uuid"]
 
 [dependencies]
 crossbeam-channel = { version = "0.5.9" }
