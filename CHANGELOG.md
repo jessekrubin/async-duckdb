@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## `v0.3.0`
+
+- upgrade duckdb to `1.4.0`
+
 ## `v0.2.0`
 
 - upgrade duckdb to `1.3.2`

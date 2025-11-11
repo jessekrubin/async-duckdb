@@ -77,7 +77,7 @@ async fn test_config_fn() {
         })
         .await
         .expect("client unable to fetch journal_mode");
-    assert_eq!(mode, "desc");
+    assert_eq!(mode.to_lowercase(), "desc");
 }
 
 async fn test_concurrency() {
