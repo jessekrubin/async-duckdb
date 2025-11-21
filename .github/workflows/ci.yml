@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.9
       - name: Setup Rust
