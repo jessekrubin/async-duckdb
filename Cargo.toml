@@ -12,6 +12,9 @@ repository = "https://github.com/jessekrubin/async-duckdb"
 documentation = "https://docs.rs/async-duckdb"
 keywords = ["duckdb", "async", "tokio"]
 categories = ["database"]
+# FUTURE: add minimum supported Rust version matched to duckdb crate (https://github.com/duckdb/duckdb-rs/blob/538d7d814d8c8dcb5164cc8e5045329de9a720d3/Cargo.toml#L20C1-L21C1)
+# this crate uses edition 2024, so minimum Rust version is at least 1.85?
+# rust-version = "1.85.0"
 
 [features]
 default = ["bundled"]
@@ -42,10 +45,10 @@ vtab-full = ["duckdb/vtab-full"]
 vtab-loadable = ["duckdb/vtab-loadable"]
 
 [dependencies]
-crossbeam-channel = { version = "0.5.9" }
-duckdb = { version = "1.4.0" }
-futures-channel = { version = "0.3.29" }
-futures-util = { version = "0.3.29" }
+crossbeam-channel = { version = "0.5.9" , default-features = false, features = ["std"]}
+duckdb = { version = "1.4.0" , default-features = false}
+futures-channel = { version = "0.3.29" , default-features = false, features = ["std"]}
+futures-util = { version = "0.3.29" , default-features = false, features = ["std", "alloc"]}
 
 [dev-dependencies]
 async-std = { version = "1.13.2" }
