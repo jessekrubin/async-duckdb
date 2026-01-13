@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## `v0.3.1`
+
+- update the features table to match duckdb
+
 ## `v0.3.0`
 
 - upgrade duckdb to `1.4.0`
