@@ -1,6 +1,6 @@
 [package]
 name = "async-duckdb"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
   "Jesse Rubin",
   "Ryan Fowler", # via ryfowl's `async-sqlite` crate
@@ -12,35 +12,46 @@ repository = "https://github.com/jessekrubin/async-duckdb"
 documentation = "https://docs.rs/async-duckdb"
 keywords = ["duckdb", "async", "tokio"]
 categories = ["database"]
+# FUTURE: add minimum supported Rust version matched to duckdb crate (https://github.com/duckdb/duckdb-rs/blob/538d7d814d8c8dcb5164cc8e5045329de9a720d3/Cargo.toml#L20C1-L21C1)
+# this crate uses edition 2024, so minimum Rust version is at least 1.85?
+# rust-version = "1.85.0"
 
 [features]
 default = ["bundled"]
-bundled = ["duckdb/bundled"]
-json = ["duckdb/json"]
-parquet = ["duckdb/parquet"]
-vscalar = ["duckdb/vscalar"]
-vtab = ["duckdb/vtab"]
-vtab-loadable = ["duckdb/vtab-loadable"]
-vtab-excel = ["duckdb/vtab-excel"]
-vtab-arrow = ["duckdb/vtab-arrow"]
+# duckdb feature flags (updated 2026-01-13)
 appender-arrow = ["duckdb/appender-arrow"]
-vtab-full = ["duckdb/vtab-full"]
-extensions-full = ["duckdb/extensions-full"]
 buildtime_bindgen = ["duckdb/buildtime_bindgen"]
-modern-full = ["duckdb/modern-full"]
-polars = ["duckdb/polars"]
-loadable-extension = ["duckdb/loadable-extension"]
+bundled = ["duckdb/bundled"]
+calamine = ["duckdb/calamine"]
 chrono = ["duckdb/chrono"]
+duckdb-loadable-macros = ["duckdb/duckdb-loadable-macros"]
+extensions-full = ["duckdb/extensions-full"]
+json = ["duckdb/json"]
+loadable-extension = ["duckdb/loadable-extension"]
+modern-full = ["duckdb/modern-full"]
+num = ["duckdb/num"]
+parquet = ["duckdb/parquet"]
+polars = ["duckdb/polars"]
+r2d2 = ["duckdb/r2d2"]
+serde_json = ["duckdb/serde_json"]
+url = ["duckdb/url"]
 uuid = ["duckdb/uuid"]
+vscalar = ["duckdb/vscalar"]
+vscalar-arrow = ["duckdb/vscalar-arrow"]
+vtab = ["duckdb/vtab"]
+vtab-arrow = ["duckdb/vtab-arrow"]
+vtab-excel = ["duckdb/vtab-excel"]
+vtab-full = ["duckdb/vtab-full"]
+vtab-loadable = ["duckdb/vtab-loadable"]
 
 [dependencies]
-crossbeam-channel = { version = "0.5.9" }
-duckdb = { version = "1.4.0" }
-futures-channel = { version = "0.3.29" }
-futures-util = { version = "0.3.29" }
+crossbeam-channel = { version = "0.5.9" , default-features = false, features = ["std"]}
+duckdb = { version = "1.4.0" , default-features = false}
+futures-channel = { version = "0.3.29" , default-features = false, features = ["std"]}
+futures-util = { version = "0.3.29" , default-features = false, features = ["std", "alloc"]}
 
 [dev-dependencies]
-async-std = { version = "1.13.1" }
+async-std = { version = "1.13.2" }
 paste = { version = "1.0.12" }
 tempfile = { version = "3.20.0" }
 tokio = { version = "1.46.1", features = ["rt"] }
@@ -63,4 +74,3 @@ missing_errors_doc = "allow"
 module_name_repetitions = "allow"
 # allow cargo
 multiple_crate_versions = "allow"
-
